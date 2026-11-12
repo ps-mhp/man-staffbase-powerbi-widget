@@ -1,0 +1,11 @@
+{
+  "title": "Power BI",
+  "summary": "Bindet einen Power-BI-Bericht direkt in die Seite ein.",
+  "icon": "📊",
+  "pages": [
+    { "id": "overview", "title": "Übersicht", "file": "overview.md" },
+    { "id": "usage", "title": "Schritt für Schritt", "file": "usage.md" },
+    { "id": "settings", "title": "Einstellungen", "file": "settings.md" },
+    { "id": "faq", "title": "FAQ", "file": "faq.md" }
+  ]
+}
