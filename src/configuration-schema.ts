@@ -32,7 +32,7 @@ export const RATIO_ATTRIBUTE = "powerbi-ratio";
  * Die einzelnen Felder bis 0.1.0-rc.1. Sie stehen weiter im Schema, damit der
  * Dialog ihre Werte führt: das Fenster übernimmt sie als Ausgangsstand und
  * schreibt sie beim ersten Übernehmen nach `powerbi-config`. Zu sehen sind sie
- * im eigenen Dialog nicht mehr (`legacy-fields.ts`).
+ * im eigenen Dialog nicht mehr (`@shared/legacy-fields`).
  */
 export const LEGACY_ATTRIBUTES = [URL_ATTRIBUTE, TITLE_ATTRIBUTE, RATIO_ATTRIBUTE] as const;
 

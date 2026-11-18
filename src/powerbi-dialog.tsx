@@ -26,11 +26,23 @@ import * as React from "react";
 import { ChartPie } from "lucide-react";
 
 import { FieldModalShellOptions, startFieldModalInjector } from "@shared/config-modal";
+import { legacyFieldsFromSchema, readLegacyFields, startHiddenFields } from "@shared/legacy-fields";
 
-import { CONFIG_ATTRIBUTE, LEGACY_ATTRIBUTES } from "./configuration-schema";
-import { readLegacyFromDialog, startHiddenFields } from "./legacy-fields";
-import { PowerbiConfig, configFromLegacy, readPowerbiConfig, serializePowerbiConfig } from "./powerbi-config";
+import { CONFIG_ATTRIBUTE, LEGACY_ATTRIBUTES, configurationSchema } from "./configuration-schema";
+import {
+  LegacyPowerbiAttributes,
+  PowerbiConfig,
+  configFromLegacy,
+  readPowerbiConfig,
+  serializePowerbiConfig,
+} from "./powerbi-config";
 import { powerbiChangesStatus, validatePowerbiConfig } from "./powerbi-editor-rules";
+
+const LEGACY_FIELDS = legacyFieldsFromSchema(LEGACY_ATTRIBUTES, configurationSchema);
+
+/** Die alten Felder, wie der eigene Dialog sie gerade führt. */
+const readLegacyFromDialog = (root: ParentNode): LegacyPowerbiAttributes =>
+  readLegacyFields(LEGACY_FIELDS, CONFIG_ATTRIBUTE, root).values as LegacyPowerbiAttributes;
 
 /**
  * Der Editor kommt erst, wenn ein Dialog ihn zeigt: er baut auf
