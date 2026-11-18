@@ -10,7 +10,7 @@ import { act, fireEvent, render } from "@testing-library/react";
 import Form from "@rjsf/mui";
 import validator from "@rjsf/validator-ajv8";
 
-import { modalRoot, settleModal } from "@shared/ui/config-modal.testing";
+import { modalRoot, settleModal, clickElement } from "@shared/ui/config-modal.testing";
 import { configurationSchema } from "./configuration-schema";
 import { readPowerbiConfig, serializePowerbiConfig } from "./powerbi-config";
 import { powerbiEditorShell, startPowerbiDialog } from "./powerbi-dialog";
@@ -27,13 +27,6 @@ const fieldValue = (container: HTMLElement): string =>
   container.querySelector<HTMLInputElement>("#powerbi #root_powerbi-config")!.value;
 
 const inModal = (selector: string): HTMLElement | null => modalRoot()?.querySelector<HTMLElement>(selector) ?? null;
-
-async function click(element: Element | null): Promise<void> {
-  if (element === null) throw new Error("Nichts zum Klicken gefunden");
-  await act(async () => {
-    (element as HTMLElement).click();
-  });
-}
 
 const pill = (name: string): HTMLElement | null =>
   Array.from(modalRoot()?.querySelectorAll<HTMLElement>('[role="radio"], button') ?? []).find(
@@ -155,8 +148,8 @@ describe("startPowerbiDialog", () => {
     const { container, stop } = await open({ "powerbi-url": EMBED, "powerbi-title": "Umsatz" });
 
     await type('input[type="text"]', "Umsatz Werk");
-    await click(pill("4:3"));
-    await click(inModal('[data-testid="config-shell-apply"]'));
+    await clickElement(pill("4:3"));
+    await clickElement(inModal('[data-testid="config-shell-apply"]'));
 
     expect(readPowerbiConfig(fieldValue(container))).toEqual({ url: EMBED, title: "Umsatz Werk", ratio: "4:3" });
     expect(container.querySelector<HTMLInputElement>('#powerbi [id="root_powerbi-url"]')!.value).toBe(EMBED);
@@ -177,7 +170,7 @@ describe("startPowerbiDialog", () => {
 
     expect(inModal('[aria-label="Seitenverhältnis"] [aria-checked="true"]')).toBeNull();
     await type('input[type="text"]', "Neu");
-    await click(inModal('[data-testid="config-shell-apply"]'));
+    await clickElement(inModal('[data-testid="config-shell-apply"]'));
 
     const written = readPowerbiConfig(fieldValue(container));
     expect(written).toEqual({ url: EMBED, title: "Neu" });
@@ -200,7 +193,7 @@ describe("startPowerbiDialog", () => {
     const { container, stop } = await open({ "powerbi-url": EMBED });
 
     await type("textarea", "https://[intranet]/berichte/kennzahlen-werk");
-    await click(inModal('[data-testid="config-shell-apply"]'));
+    await clickElement(inModal('[data-testid="config-shell-apply"]'));
 
     expect(fieldValue(container)).toBe("");
     expect(inModal("textarea")).toHaveAttribute("aria-invalid", "true");
@@ -213,7 +206,7 @@ describe("startPowerbiDialog", () => {
   it("zeigt in der Geräteansicht Vorschau und Inspektor mit denselben Feldern", async () => {
     const { stop } = await open({ "powerbi-url": EMBED });
 
-    await click(Array.from(modalRoot()!.querySelectorAll<HTMLElement>('[aria-label="Ansicht"] [role="radio"]')).find((b) => b.textContent === "Desktop") ?? null);
+    await clickElement(Array.from(modalRoot()!.querySelectorAll<HTMLElement>('[aria-label="Ansicht"] [role="radio"]')).find((b) => b.textContent === "Desktop") ?? null);
     await settleModal();
 
     expect(inModal('[data-testid="powerbi-preview-frame"]')).not.toBeNull();
