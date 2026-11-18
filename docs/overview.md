@@ -14,5 +14,6 @@ Anmeldung mit dem Firmenkonto nötig sein.
 
 ## Was Sie im CMS-Editor sehen
 
-Dasselbe wie Leser:innen. Fehlt der Link oder ist er ungültig, erscheint statt
+Dasselbe wie Leser:innen; bearbeitet wird im Vollbild-Fenster **Bericht
+einbinden**. Fehlt der Link oder ist er ungültig, erscheint statt
 des Berichts ein grauer Hinweis mit dem Grund.

@@ -2,7 +2,7 @@
 
 **Frage:** „Kein Power-BI-Link konfiguriert. Bitte in den Widget-Einstellungen den Einbettungslink des Berichts eintragen.“
 
-Antwort: Das Feld **Power-BI-Link** ist leer. Link wie unter „Schritt für Schritt“ beschrieben eintragen.
+Antwort: Das Feld **Power-BI-Link** im Fenster **Bericht einbinden** ist leer. Link wie unter „Schritt für Schritt“ beschrieben eintragen.
 
 **Frage:** „Der Link führt nicht zu Power BI. Erlaubt sind nur Links auf app.powerbi.com (bzw. die Power-BI-Clouds für Behörden und China).“
 
@@ -18,4 +18,4 @@ Antwort: Das kommt von Power BI selbst. Leser:innen brauchen eine Power-BI-Lizen
 
 **Frage:** Der Bericht hat graue Ränder oder ist zu klein.
 
-Antwort: Unter **Seitenverhältnis** das Format wählen, das die Berichtsseite in Power BI hat (meist 16:9).
+Antwort: Im Fenster **Bericht einbinden** unter **Seitenverhältnis** das Format wählen, das die Berichtsseite in Power BI hat (meist 16:9).
