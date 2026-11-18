@@ -14,7 +14,8 @@ const EMBED =
 describe("the widget's attributes", () => {
   it("are exactly the keys the configuration schema stores under", () => {
     expect(Object.keys(configurationSchema.properties!)).toEqual(widgetAttributes);
-    expect(Object.keys(uiSchema)).toEqual(widgetAttributes);
+    expect(Object.keys(uiSchema)).toEqual(["powerbi-config"]);
+    expect(widgetAttributes).toEqual(["powerbi-config", "powerbi-url", "powerbi-title", "powerbi-ratio"]);
     for (const name of widgetAttributes) expect(name).toBe(name.toLowerCase());
   });
 
@@ -27,6 +28,12 @@ describe("the widget's attributes", () => {
       const source = fs.readFileSync(schema, "utf8");
       for (const name of widgetAttributes) expect(source).not.toContain(`"${name}"`);
     }
+  });
+});
+
+describe("the configuration schema", () => {
+  it("requires nothing: the link is checked by the window, the hidden field stays empty", () => {
+    expect(configurationSchema.required).toBeUndefined();
   });
 });
 

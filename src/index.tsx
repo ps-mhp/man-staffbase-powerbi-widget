@@ -21,23 +21,16 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 
 import { BlockFactory, BlockDefinition, ExternalBlockDefinition, BaseBlock } from "widget-sdk";
-import {
-  configurationSchema,
-  DEFAULT_RATIO,
-  DEFAULT_TITLE,
-  RATIO_ATTRIBUTE,
-  RATIOS,
-  TITLE_ATTRIBUTE,
-  uiSchema,
-  URL_ATTRIBUTE,
-} from "./configuration-schema";
+import { ALL_ATTRIBUTES, configurationSchema, DEFAULT_RATIO, DEFAULT_TITLE, RATIOS, uiSchema } from "./configuration-schema";
+import { resolvePowerbiConfig } from "./powerbi-config";
+import { startPowerbiDialog } from "./powerbi-dialog";
 import { resolveEmbedUrl } from "./powerbi-url";
 import { PowerbiView } from "./powerbi-view";
 import icon from "../resources/powerbi-widget.svg";
 import pkg from "../package.json";
 
 /** Attributes handled by the widget; mirrored in the configuration schema and `widgets.json`. */
-export const widgetAttributes: string[] = [URL_ATTRIBUTE, TITLE_ATTRIBUTE, RATIO_ATTRIBUTE];
+export const widgetAttributes: string[] = ALL_ATTRIBUTES;
 
 /** The frame's accessible name; the default when the field is left empty. */
 export function readTitle(value: unknown): string {
@@ -54,14 +47,16 @@ const factory: BlockFactory = (BaseBlockClass, _widgetApi) => {
     private _root: ReactDOM.Root | null = null;
 
     public renderBlock(container: HTMLElement): void {
-      const attrs = this.parseAttributes<Record<string, unknown>>();
+      // `powerbi-config`, je Schlüssel vor dem einzelnen Feld älterer Fassungen:
+      // Blöcke ohne `powerbi-config` rendern wie bisher (`powerbi-config.ts`).
+      const settings = resolvePowerbiConfig(this.parseAttributes<Record<string, unknown>>());
 
       this._root ??= ReactDOM.createRoot(container);
       this._root.render(
         <PowerbiView
-          embed={resolveEmbedUrl(attrs[URL_ATTRIBUTE])}
-          title={readTitle(attrs[TITLE_ATTRIBUTE])}
-          aspectRatio={readAspectRatio(attrs[RATIO_ATTRIBUTE])}
+          embed={resolveEmbedUrl(settings.url)}
+          title={readTitle(settings.title)}
+          aspectRatio={readAspectRatio(settings.ratio)}
         />,
       );
     }
@@ -99,10 +94,17 @@ const externalBlockDefinition: ExternalBlockDefinition = {
 };
 
 // Guarded so the module loads in Jest/jsdom, where defineBlock is absent.
+// Das Fenster „Bericht einbinden“ hängt am Anmelden, nicht am Laden: auf
+// Modulebene gestartet, belegte das installierte Bündel das Feld
+// `powerbi-config`, bevor feststeht, ob ein lokaler Entwicklungsserver
+// übernimmt.
 if (typeof window.defineBlock === "function") {
   void startWidget({
     name: "powerbi-widget",
     version: pkg.version,
-    register: () => window.defineBlock(externalBlockDefinition),
+    register: () => {
+      startPowerbiDialog();
+      window.defineBlock(externalBlockDefinition);
+    },
   });
 }
